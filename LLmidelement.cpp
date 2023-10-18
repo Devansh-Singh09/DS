@@ -1,4 +1,3 @@
-// return mid element in time o(n)
 Node* Middle(Node* head){
     if(head==NULL || head->next==NULL)return head;
     Node* slow=head;
