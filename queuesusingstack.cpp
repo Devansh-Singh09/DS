@@ -1,5 +1,6 @@
-//Implement Queue using Stacks
-#include<stack>
+#include <iostream>
+#include <stack>
+using namespace std;
 class MyQueue {
     stack<int> st1;
     stack<int> st2;
@@ -42,12 +43,17 @@ public:
     }
 };
 
-//Minimum element in stack in constant space
-int ME(stack<int> st){
-    int ans=INT_MAX;
-    while(!st.empty()){
-        ans=min(ans,st.top());
-        st.pop();
-    }
-    return ans;
+int main(){
+	MyQueue q;
+	q.push(10);
+	q.push(20);
+	cout<<q.peek()<<endl;
+	q.pop();
+	if(q.empty()){
+		cout<<"Empty Queue";
+	}
+	else{
+		cout<<q.peek();
+	}
+	return 0;
 }
