@@ -1,43 +1,106 @@
-//Postfix
-int calc(int v1,int v2,char op){
-    if (op=='^')
-    {
-    return pow(v1,v2);
-    }else if (op=='+')
-    {
-    return v1+v2;
-    }else if (op=='-')
-    {
-    return v1-v2;
-    }else if (op=='*')
-    {
-    return v1*v2;
-    }else if (op=='/')
-    {
-    return v1/v2;
-    } 
+#include<iostream>
+#include<iostream>
+#include<stack>
+using namespace std;
+
+bool isOperator(char c)
+{
+	if(c=='+'||c=='-'||c=='*'||c=='/'||c=='^')
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
-int evaluate(string str){
-    stack<int> st;
-    for (int i = 0; i < str.size(); i++)
-    {
-    char ch=str[i];
-    if (isdigit(ch))
-    {
-    st.push(ch-'0');
-subtracting '0' to get original value of the number
-    }else{
-    int v2=st.top();
-    st.pop();
-    int v1=st.top();
-    st.pop();
-    st.push(calc(v1,v2,ch));
-    }
-    }
-    return st.top();
+
+int precedence(char c) 
+{ 
+    if(c == '^') 
+    return 3; 
+    else if(c == '*' || c == '/') 
+    return 2; 
+    else if(c == '+' || c == '-') 
+    return 1; 
+    else
+    return -1; 
+} 
+
+string InfixToPostfix(stack<char> s, string infix)
+{
+	string postfix;
+	for(int i=0;i<infix.length();i++)
+	{
+		if((infix[i] >= 'a' && infix[i] <= 'z')
+		||(infix[i] >= 'A' && infix[i] <= 'Z') || (infix[i] >= '0' && infix[i] <= '9'))
+		{
+			postfix+=infix[i];
+		}
+		else if(infix[i] == '(')
+		{
+			s.push(infix[i]);
+		}
+		else if(infix[i] == ')')
+		{
+			while((s.top()!='(') && (!s.empty()))
+			{
+				char temp=s.top();
+				postfix+=temp;
+				s.pop();
+			}
+			if(s.top()=='(')
+			{
+				s.pop();
+			}
+		}
+		else if(isOperator(infix[i]))
+		{
+			if(s.empty())
+			{
+				s.push(infix[i]);
+			}
+			else
+			{
+				if(precedence(infix[i])>precedence(s.top()))
+				{
+					s.push(infix[i]);
+				}	
+				else if((precedence(infix[i])==precedence(s.top()))&&(infix[i]=='^'))
+				{
+					s.push(infix[i]);
+				}
+				else
+				{
+					while((!s.empty())&&( precedence(infix[i])<=precedence(s.top())))
+					{
+						postfix+=s.top();
+						s.pop();
+					}
+					s.push(infix[i]);
+				}
+			}
+		}
+	}
+	while(!s.empty())
+	{
+		postfix+=s.top();
+		s.pop();
+	}
+	
+	return postfix;
 }
-int main(){
-    string str="231*+9-";
-    cout<<evaluate(str);
-    return 0;
+
+int main() 
+{  
+
+  	string infix_exp, postfix_exp;
+  	cout<<"Enter a Infix Expression :"<<endl;
+  	cin>>infix_exp;
+  	stack <char> stack;
+	cout<<"INFIX EXPRESSION: "<<infix_exp<<endl;
+  	postfix_exp = InfixToPostfix(stack, infix_exp);
+  	cout<<endl<<"POSTFIX EXPRESSION: "<<postfix_exp;
+	  
+	return 0;
 }
