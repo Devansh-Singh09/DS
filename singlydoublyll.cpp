@@ -1,123 +1,132 @@
-class Node{//singly linked list
-    public:
-    int val;
-    Node* prev;
-    Node* next;
-    Node(int data){
-        val=data;
-        prev=NULL;
-        next=NULL;
-    }
+#include <iostream>
+using namespace std;
+template<class T>
+class DoublyLinkedList
+{
+    struct Node
+    {
+        T data;
+        Node* next;
+        Node* prev;
+        Node(T val): data(val), next(nullptr), prev(nullptr) {}
+    };
+    Node *head, *tail;
+
+     public:
+      DoublyLinkedList(): head(nullptr), tail(nullptr) {}
+
+     ~DoublyLinkedList()
+      {
+          Node *tmp = nullptr;
+          while (head)
+          {
+              tmp = head;
+              head = head->next;
+              delete tmp;
+          }
+          head = nullptr;
+      }
+
+      DoublyLinkedList(const DoublyLinkedList<T> & dll) = delete;
+      DoublyLinkedList& operator=(DoublyLinkedList const&) = delete;
+
+      void insertFront(T val)
+      {
+          Node *node = new Node(val);
+          Node *tmp = head;
+          if (head == nullptr)
+          {
+              head = node;
+              tail = node;
+          }
+          else
+          {
+              node->next = head;
+              head = node;
+              node->next->prev = node;
+          }
+      }
+
+      void insertBack(T val)
+      {
+          Node *node = new Node(val);
+          if(tail->next == nullptr)
+          {
+              tail->next = node;
+              tail = node;
+          }
+      }
+
+
+     void deleteVal(T val)
+     {
+          Node* find = findVal(val);
+          Node *tmp = head;
+
+          if(tmp == find)
+          {
+              head = tmp->next;
+          }
+          else
+          {
+              while(find != nullptr)
+              {
+                  if(tmp->next == find)
+                  {
+                      tmp->next = find->next;
+                      find->next->prev = tmp;
+                      delete find;
+                      return;
+                  }
+                  tmp = tmp->next;
+              }
+          }
+      }
+
+     template <class U>
+     friend std::ostream & operator<<(std::ostream & os, const DoublyLinkedList<U> & dll){
+      dll.display(os);
+      return os;
+     }
+
+     private:
+
+         Node *findVal(T n) //returns node of the given number
+         {    
+              Node *node = head;
+              while(node != nullptr)
+              {
+                    if(node->data == n)
+                          return node;
+
+                    node = node->next;
+              }
+              std::cerr << "No such element in the list \n";
+              return nullptr;
+          }
+
+       void display(std::ostream& out = std::cout) const
+       {
+            Node *node = head;
+            while(node != nullptr)
+            {
+                out << node->data << " ";
+                node = node->next;
+            }
+        } 
 };
-class DoublyLinkedList{//Doubly linked list
-public:
-    Node* head;
-    Node* tail;
-    DoublyLinkedList(){
-        head=NULL;
-        tail=NULL;
-    }
-    void insertAtStart(int val){
-        Node* new_node=new Node(val);
-        if (head==NULL)
-        {
-            head=new_node;
-            tail=new_node;
-            return;
-        }
-        new_node->next=head;
-        head->prev=new_node;
-        head=new_node;
-        
-    }
-    void display(){
-        Node* temp=head;
-        while (temp!=NULL)
-        {
-            cout<<temp->val<<" ";
-            temp=temp->next;
-        }
-    }
-    void inserAtTail(int val){
-        Node* new_node=new Node(val);
-        if (head==NULL){
-            head=new_node;
-            tail=new_node;
-            return;
-        }
-        tail->next=new_node;
-        new_node->prev=tail;
-        tail=new_node;
-    }
-
-
-    void insertAtPosition(int val,int k){
-        //assuming k is less than or equal to length of dll
-        Node* temp=head;
-        int count=1;
-        while (count<(k-1))
-        {
-            temp=temp->next;
-            count++;
-        }
-        //temp will be pointing to the node at (k-1)th position
-        Node* new_node=new Node(val);
-        new_node->next=temp->next;
-        temp->next=new_node;
-        new_node->prev=temp;
-        new_node->next->prev=new_node;
-        return;
-
-    }
-    void deleteAtStart(){
-        if (head==NULL)
-        {
-            return;
-        }
-        Node* temp=head;
-        head=head->next;
-        if (head==NULL)//if dll has only one node
-        {
-            tail=NULL;
-        }
-        else{
-            head->prev=NULL;
-        }
-        free(temp);
-        return;
-        
-    }
-    void deleteAtEnd(){
-        if (head==NULL)
-        {
-            return;
-        }
-        Node* temp=tail;
-        tail=tail->prev;
-        if (tail==NULL)
-        {
-            head=NULL;
-        }
-        else{
-            tail->next=NULL;
-        }
-        free(temp);
-        return;   
-    }
-    void deleteAtPosition(int k){
-        //assuming k is less than or equal to length of dll
-        Node* temp=head;
-        int counter=1;
-        while (counter<k)
-        {
-            temp=temp->next;
-            counter++;
-        }
-        //mow temp is pointing to node at kth position
-        temp->prev->next=temp->next;
-        temp->next->prev=temp->prev;
-        free(temp);
-        return;
-        
-    }
-};
+int main(){
+  DoublyLinkedList<int> l1;
+  l1.insertFront(3);
+  l1.insertBack(5);
+  l1.insertBack(12);
+  l1.insertFront(6);
+  l1.insertBack(88);
+  cout<<l1<<"\n";
+  cout<<"Enter val to be deleted"<<endl;
+  int num;
+  cin>>num;
+  l1.deleteVal(num);
+  cout<<l1<<"\n";
+  return 0;
+}
