@@ -1,104 +1,82 @@
-//Stack implementation using array and link list
+#include <iostream>
 
-class Node{ 
+using namespace std;
+
+class stack{
     public:
-    int val; 
-    Node* next;
-    Node(int data){
-        this->val=data;
-        this->next=NULL;
-        }};
-    class Stack{
-        Node* head;
-        int capacity; 
-        int currSize; 
-        Stack(int c){ 
-            this->capacity=c; 
-            this->currSize=0;
-            head=NULL; 
+
+        int *arr;
+        int top;
+        int size;
+    stack(int size){
+        this -> size = size;
+        arr = new int(size);
+        top = -1;
+    }
+    void push(int element){
+        if(size - top > 1){
+            top++;
+            arr[top] = element;
+
         }
-        bool isEmpty(){
-            return this->head==NULL;
+        else{
+            cout << "stack overflow" << endl;
         }
-        bool isFull(){
-            return this->currSize==this->capacity;
+    }
+    void pop(){
+        if(top >= 0){
+            top--;
         }
-        void push(int data){
-            if (this->capacity==this->currSize) 
-            {
-                cout<<"Overflow";
-                return;
-            }
-            Node* new_node=new Node(data);
-            new_node->next=this->head; 
-            this->head=new_node; 
-            this->currSize++; 
+        else{
+            cout << "stack underflow" << endl;
         }
-        int pop(){ 
-            if (this->currSize==NULL)
-            {
-                cout<<"Underflow";
-                return;
-            }
-            Node* new_head=this->head->next;
-            this->head->next=NULL;
-            Node* tobeRemoved=this->head;
-            int result=tobeRemoved->val;
-            delete tobeRemoved;
-            this->head=new_head;
-            return result;
-        } 
-        int getTop(){
-            if (this->head==NULL) 
-            {
-                cout<<"Underflow";
-                return;
-            }
-            return this->head->val;
+    }
+    int peek(){
+        if( top >= 0){
+            return arr[top];
         }
-        int size(){
-            return this->currSize;
-            } 
+        else{
+            cout << "not have any element";
+        }
+    }
+    bool isempty(){
+        if(top == -1){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
 };
+int main(){
+    stack st(5);
 
-//using array
-class Stack{ 
-    int capacity;
-    int* arr; 
-    int top; 
-    public:
-    Stack(int c){ 
-        this->capacity=c; 
-        arr=new int[c]; 
-        this->top=-1;} 
-        void push(int data){
-            if(this->top==this->capacity-1){
-                cout<<"Overflow"<<endl; 
-                return ; } 
-                this->top++; 
-                this->arr[this->top]=data; 
-                } 
-                int pop(){ 
-                if(this->top==-1){ 
-                    cout<<"underflow";
-                    return INT_MIN; 
-                } 
-                this->top--; 
-                } 
-                int gettop(){ 
-                if (this->top==-1) 
-                {
-                    cout<<"Underflow";
-                    return INT_MIN; 
-                } 
-                return this->arr[this->top]; 
-            } 
-            bool isEmpty(){ 
-                return this->top==-1; 
-            } 
-            int size(){ 
-                return this->top + 1; 
-            } 
-            bool isFull(){ 
-                return this->top==this->capacity-1; 
-            }};
+    st.push(22);
+    st.push(43);
+    st.push(44);
+    st.push(22);
+    st.push(43);
+    
+
+    cout << st.peek() << endl;
+
+    st.pop();
+
+    cout << st.peek() << endl;
+
+    st.pop();
+
+    cout << st.peek() << endl;
+
+    st.pop();
+
+    cout << st.peek() << endl;
+
+    if(st.isempty()) {
+        cout << "Stack is Empty  " << endl;
+    }
+    else{
+        cout << "Stack is not Empty  " << endl;
+    }
+   
+}
